@@ -15,8 +15,6 @@ class CreateToDoViewController: UIViewController {
     
     @IBOutlet weak var toDoTextField: UITextField!
     
-    var previousVC = TasksViewController()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -26,13 +24,15 @@ class CreateToDoViewController: UIViewController {
     @IBAction func addTapped(_ sender: Any) {
         // Create a task from the outlet information
         
-        let task = Task()
+        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        
+        let task = Task(context: context)
+        
         task.name = toDoTextField.text!
         task.important = importantSwitch.isOn
+        (UIApplication.shared.delegate as! AppDelegate).saveContext()
         
-        // Add new task to array in previous viewController
-        previousVC.tasks.append(task)
-        previousVC.tableView.reloadData()
+        // Pop Back
         navigationController!.popViewController(animated: true)
     }
 
